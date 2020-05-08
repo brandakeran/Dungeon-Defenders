@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 2287028595195033631}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -21.91, y: 6, z: 0.63579655}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalHealth: 100
   currentHealth: 0
+  spawner: {fileID: 0}
 --- !u!114 &6689704014182575917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,6 +170,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeBetweenAttack: 1
   move: {fileID: 2813647831024207344}
+  target: {fileID: 0}
   enemyHealth: {fileID: 8074301482262053757}
-  playerHealth: {fileID: 0}
   attackDamage: 10
