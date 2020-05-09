@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     float yaw, pitch; // yaw - y axis rot, pitch - x axis rot
 
     public Transform target;
-    public float distFromTarget = 2;
+    public float distFromTarget = 4;
     public Vector2 pitchMinMax = new Vector2(-40, 85);
 
 
