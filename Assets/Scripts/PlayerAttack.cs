@@ -7,18 +7,17 @@ public class PlayerAttack : MonoBehaviour
 
     public int damage = 100;
     public float range = 300f;
-    public float timeBetweenShots = 0.5f;
+    public float timeBetweenShots = 2;
+
+    Animator animator;
+    GameObject hand;
 
     float timer;
-    Ray shootRay;
-    RaycastHit shootHit;
-
-    LineRenderer gunLine;
-
     // Start is called before the first frame update
     void Start()
     {
-        gunLine = GetComponent<LineRenderer>();
+        animator = GetComponent<Animator>();
+        hand = GameObject.Find("mixamorig:RightHand");
 
     }
 
@@ -36,25 +35,10 @@ public class PlayerAttack : MonoBehaviour
     {
         timer = 0f;
 
-        gunLine.enabled = true;
-        gunLine.SetPosition(0, transform.position);
+        BoxCollider collider = hand.transform.GetChild(1).gameObject.GetComponent<BoxCollider>();
+        collider.enabled = true;
 
-        shootRay.origin = transform.position;
-        shootRay.direction = transform.forward;
-
-        if(Physics.Raycast(shootRay, out shootHit, range))
-        {
-            EnemyHealth enemyHealth = shootHit.collider.GetComponent<EnemyHealth>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(damage);
-            }
-            gunLine.SetPosition(1, shootHit.point);
-        }
-        else
-        {
-            gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
-        }
+        animator.SetTrigger("Attacking");
 
     }
 }

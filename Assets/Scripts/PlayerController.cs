@@ -46,20 +46,29 @@ public class PlayerController : MonoBehaviour
         Vector2 input = new Vector2(hor, ver);
         Vector2 inputDir = input.normalized;
 
-        if (inputDir != Vector2.zero)
+        if (!animator.GetCurrentAnimatorStateInfo(1).IsName("Attacking"))
         {
-            float targetRotation = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + cameraT.eulerAngles.y;
-            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
+            if (inputDir != Vector2.zero)
+            {
+                float targetRotation = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + cameraT.eulerAngles.y;
+                transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
+            }
+            else
+            {
+                float targetRotation = cameraT.eulerAngles.y;
+                transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime2);
+            }
         }
-        else
-        {
-            float targetRotation = cameraT.eulerAngles.y;
-            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime2);
-        }
+        
 
         bool running = Input.GetKey(KeyCode.LeftShift);
         float targetSpeed = ((running) ? runSpeed : walkSpeed) * inputDir.magnitude;
         currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedSmoothVelocity, speedSmoothTime);
+
+        if (animator.GetCurrentAnimatorStateInfo(1).IsName("Attacking"))
+        {
+            currentSpeed = 0;
+        }
 
         velocityY += Time.deltaTime * gravity;
         Vector3 velocity = transform.forward * currentSpeed + Vector3.up * velocityY;
@@ -71,20 +80,25 @@ public class PlayerController : MonoBehaviour
         }
         
         if (Input.GetKey(KeyCode.Space)){
-            print("space");
             Jump();
         }
 
-        float animationSpeedPercent = ((running) ? 1 : 0.5f) * inputDir.magnitude;
-        animator.SetFloat("SpeedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime); 
+        if (inputDir.magnitude != 0)
+        {
+            float animationSpeedPercent = ((running) ? 1 : 0f) * inputDir.magnitude;
+            animator.SetBool("Moving", true);
+            animator.SetFloat("SpeedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
+        }
+        else
+        {
+            animator.SetBool("Moving", false);
+        }
     }
 
     void Jump()
     {
-        print(controller.isGrounded);
-        if (controller.isGrounded)
+        if (controller.isGrounded && !animator.GetCurrentAnimatorStateInfo(1).IsName("Attacking"))
         {
-            print("jump");
             float jumpVelocity = Mathf.Sqrt(-2 * gravity * jumpHeight);
             velocityY = jumpVelocity;
         }
