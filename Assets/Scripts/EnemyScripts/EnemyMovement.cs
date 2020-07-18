@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class EnemyMovement : MonoBehaviour
     public float speed;
     public GameObject target;
     bool targetInRange;
-
+    NavMeshAgent agent;
 
 
     // Start is called before the first frame update
@@ -17,13 +18,17 @@ public class EnemyMovement : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player");
     }
 
+    void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
         
-        transform.LookAt(target.transform);
-
-        transform.position += transform.forward * speed * Time.deltaTime;
+       agent.destination = target.transform.position;
 
     }
 }
